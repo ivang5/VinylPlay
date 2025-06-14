@@ -22,3 +22,7 @@
     #000000 3px
   );
 }
+
+.vinyl-part {
+  @apply absolute inset-1/2 -translate-1/2 bg-black rounded-full;
+}

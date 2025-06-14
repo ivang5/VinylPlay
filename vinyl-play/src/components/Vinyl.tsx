@@ -1,9 +1,15 @@
-export const Vinyl = () => (
+type VinylPropType = {
+  image?: string;
+};
+
+export const Vinyl = ({ image }: VinylPropType) => (
   <div className="vinyl-pattern size-140 rounded-full relative border-8 border-black">
-    <div className="absolute inset-1/2 size-68.5 -translate-1/2 bg-black rounded-full"></div>
-    <div className="absolute inset-1/2 size-66 -translate-1/2 bg-black border-2 border-[#1a1a1a] rounded-full"></div>
-    <div className="absolute inset-1/2 size-62 -translate-1/2 bg-black border-2 border-[#1a1a1a] rounded-full"></div>
-    <div className="absolute inset-1/2 size-56 -translate-1/2 bg-red-600 rounded-full"></div>
-    <div className="absolute inset-1/2 size-3 -translate-1/2 bg-gray-300 rounded-full"></div>
+    <div className="vinyl-part size-68.5"></div>
+    <div className="vinyl-part size-66 border-2 border-[#1a1a1a]"></div>
+    <div className="vinyl-part size-62 border-2 border-[#1a1a1a]"></div>
+    <div className="vinyl-part size-56 !bg-red-600 overflow-hidden">
+      {image && <img src={image} alt="Album Cover" />}
+    </div>
+    <div className="vinyl-part size-3 !bg-gray-200"></div>
   </div>
 );
