@@ -6,10 +6,19 @@
   font-weight: 400;
 
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #fcfcfc;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.vinyl-pattern {
+  background-image: repeating-radial-gradient(
+    circle,
+    #1a1a1a 0px,
+    #1a1a1a 1px,
+    #000000 3px
+  );
 }
