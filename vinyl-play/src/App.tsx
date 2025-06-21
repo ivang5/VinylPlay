@@ -1,4 +1,13 @@
 import "./App.css";
-import { Vinyl } from "./components/Vinyl";
+import Home from "./pages/Home";
+import Callback from "./pages/Callback";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-export const App = () => <Vinyl />;
+export const App = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/callback" element={<Callback />} />
+    </Routes>
+  </BrowserRouter>
+);
