@@ -15,16 +15,29 @@ const ensureValidAccessToken = async (): Promise<string> => {
   return tokenStorage.accessToken!;
 };
 
-export const getUserProfile = async () => {
+export const fetchWebApi = async (
+  endpoint: string,
+  method?: string,
+  body?: JSON
+) => {
   const token = await ensureValidAccessToken();
 
-  const res = await fetch(`${import.meta.env.VITE_SPOTIFY_API}/v1/me`, {
+  const res = await fetch(`${import.meta.env.VITE_SPOTIFY_API}/${endpoint}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    method,
+    body: JSON.stringify(body),
   });
+  return await res.json();
+};
 
-  if (!res.ok) throw new Error("Failed to fetch user data");
+export const getUserProfile = async () => {
+  return await fetchWebApi("v1/me");
+};
 
-  return res.json();
+export const getTopTracks = async () => {
+  return (
+    await fetchWebApi("v1/me/top/tracks?time_range=long_term&limit=5", "GET")
+  ).items;
 };
