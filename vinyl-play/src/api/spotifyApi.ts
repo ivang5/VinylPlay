@@ -53,3 +53,15 @@ export const getTopTracks = async () => {
     await fetchWebApi("v1/me/top/tracks?time_range=long_term&limit=5", "GET")
   ).items;
 };
+
+export const transferPlaybackToDevice = async (device_id: string) => {
+  return await fetchWebApi(
+    "v1/me/player",
+    "PUT",
+    { "Content-Type": "application/json" },
+    {
+      device_ids: [device_id],
+      play: true,
+    }
+  );
+};
