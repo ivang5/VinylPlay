@@ -18,17 +18,29 @@ const ensureValidAccessToken = async (): Promise<string> => {
 export const fetchWebApi = async (
   endpoint: string,
   method?: string,
-  body?: JSON
+  headers?: object,
+  body?: object
 ) => {
   const token = await ensureValidAccessToken();
 
   const res = await fetch(`${import.meta.env.VITE_SPOTIFY_API}/${endpoint}`, {
     headers: {
       Authorization: `Bearer ${token}`,
+      ...headers,
     },
     method,
-    body: JSON.stringify(body),
+    body: body ? JSON.stringify(body) : undefined,
   });
+
+  if (!res.ok) {
+    const error = await res.text();
+    throw new Error(`Spotify API error ${res.status}: ${error}`);
+  }
+
+  if (res.status === 204) {
+    return null;
+  }
+
   return await res.json();
 };
 
