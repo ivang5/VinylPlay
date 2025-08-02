@@ -1,4 +1,3 @@
-// SpotifyPlayer.tsx
 import { useEffect, useState } from "react";
 import { transferPlaybackToDevice } from "../api/spotifyApi";
 
@@ -12,7 +11,7 @@ type SpotifyPlayerProps = {
   accessToken: string;
 };
 
-const SpotifyPlayer = ({ accessToken }: SpotifyPlayerProps) => {
+export const SpotifyPlayer = ({ accessToken }: SpotifyPlayerProps) => {
   const [player, setPlayer] = useState<Spotify.Player | null>(null);
   const [deviceId, setDeviceId] = useState<string | null>(null);
 
@@ -63,5 +62,3 @@ const SpotifyPlayer = ({ accessToken }: SpotifyPlayerProps) => {
     </div>
   );
 };
-
-export default SpotifyPlayer;
