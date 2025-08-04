@@ -1,7 +1,12 @@
 let player: Spotify.Player | null = null;
 let deviceId: string | null = null;
-const listeners: Set<(state: Spotify.PlaybackState | null) => void> = new Set();
+let listeners: Set<(state: Spotify.PlaybackState | null) => void> = new Set();
 let readyCallbacks: Set<(deviceId: string) => void> = new Set();
+let playerReadyCallbacks: Set<(player: Spotify.Player) => void> = new Set();
+
+const notifyPlayerInstanceReady = (playerInstance: Spotify.Player) => {
+  playerReadyCallbacks.forEach((cb) => cb(playerInstance));
+};
 
 export const initializeSpotifyPlayer = (accessToken: string): Promise<void> => {
   return new Promise((resolve) => {
@@ -16,12 +21,13 @@ export const initializeSpotifyPlayer = (accessToken: string): Promise<void> => {
       player = new window.Spotify.Player({
         name: "Vinyl Player",
         getOAuthToken: (cb) => cb(accessToken),
-        volume: 0.5,
+        volume: 0.2,
       });
 
       player.addListener("ready", ({ device_id }) => {
         deviceId = device_id;
         readyCallbacks.forEach((cb) => cb(device_id));
+        notifyPlayerInstanceReady(player!);
         resolve();
       });
 
@@ -48,10 +54,8 @@ export const getPlayer = () => {
   return player;
 };
 
-export const togglePlay = async () => {
-  if (player) {
-    await player.togglePlay();
-  }
+export const togglePlay = () => {
+  return player?.togglePlay();
 };
 
 export const subscribeToPlayerState = (
@@ -65,4 +69,10 @@ export const onPlayerReady = (cb: (deviceId: string) => void) => {
   if (deviceId) cb(deviceId);
   else readyCallbacks.add(cb);
   return () => readyCallbacks.delete(cb);
+};
+
+export const onPlayerInstanceReady = (cb: (player: Spotify.Player) => void) => {
+  if (player) cb(player);
+  else playerReadyCallbacks.add(cb);
+  return () => playerReadyCallbacks.delete(cb);
 };

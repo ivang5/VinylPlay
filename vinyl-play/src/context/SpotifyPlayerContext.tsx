@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   initializeSpotifyPlayer,
+  onPlayerInstanceReady,
   onPlayerReady,
   subscribeToPlayerState,
-  togglePlay,
 } from "../services/spotifyPlayerService";
+import { transferPlaybackToDevice } from "../api/spotifyApi";
 
 type SpotifyPlayerContextType = {
   isPlaying: boolean;
@@ -23,13 +24,19 @@ export const SpotifyPlayerProvider = ({
   accessToken: string;
   children: React.ReactNode;
 }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [deviceId, setDeviceId] = useState<string | null>(null);
+  const [player, setPlayer] = useState<Spotify.Player | null>(null);
 
   useEffect(() => {
     initializeSpotifyPlayer(accessToken).then(() => {
-      const unsubscribeReady = onPlayerReady((id) => {
+      const unsubscribeReady = onPlayerReady(async (id) => {
         setDeviceId(id);
+        await transferPlaybackToDevice(id);
+      });
+
+      const unsubscribeInstance = onPlayerInstanceReady((playerInstance) => {
+        setPlayer(playerInstance);
       });
 
       const unsubscribeState = subscribeToPlayerState((state) => {
@@ -38,17 +45,26 @@ export const SpotifyPlayerProvider = ({
 
       return () => {
         unsubscribeReady();
+        unsubscribeInstance();
         unsubscribeState();
       };
     });
   }, [accessToken]);
+
+  const handleTogglePlay = () => {
+    if (!player) {
+      console.warn("Spotify player not ready");
+      return;
+    }
+    player.togglePlay();
+  };
 
   return (
     <SpotifyPlayerContext.Provider
       value={{
         isPlaying,
         deviceId,
-        togglePlay,
+        togglePlay: handleTogglePlay,
       }}
     >
       {children}

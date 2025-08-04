@@ -29,6 +29,7 @@ export const Home = () => {
   return (
     <div>
       <button
+        className="px-3 py-1 bg-blue-300 rounded-sm border border-blue-600 cursor-pointer hover:bg-blue-400 transition-[background-color]"
         onClick={() => {
           tokenStorage.clear();
           location.reload();
@@ -39,7 +40,15 @@ export const Home = () => {
       {user && <div>Welcome {user.display_name}</div>}
       <div>
         <div>
-          <button onClick={togglePlay}>Toggle Play</button>
+          <button
+            className="px-3 py-1 bg-blue-300 rounded-sm border border-blue-600 cursor-pointer hover:bg-blue-400 transition-[background-color]"
+            onClick={() => {
+              console.log("Toggle play clicked...");
+              togglePlay();
+            }}
+          >
+            {isPlaying ? "Pause" : "Play"}
+          </button>
           {deviceId && <p>Connected to device: {deviceId}</p>}
         </div>
       </div>
