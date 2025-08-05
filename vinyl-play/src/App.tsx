@@ -4,10 +4,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { tokenStorage } from "./auth/tokenStorage";
 import { SpotifyPlayerProvider } from "./context/SpotifyPlayerContext";
-import { redirectToSpotifyAuthorize } from "./auth/authService";
+import { Login } from "./pages/Login";
 
 export const App = () => {
-  const accessToken = tokenStorage.accessToken;
+  const token = tokenStorage.accessToken;
 
   return (
     <BrowserRouter>
@@ -15,14 +15,12 @@ export const App = () => {
         <Route
           path="/"
           element={
-            !accessToken ? (
-              <button onClick={redirectToSpotifyAuthorize}>
-                Login with Spotify
-              </button>
-            ) : (
-              <SpotifyPlayerProvider accessToken={accessToken}>
+            token ? (
+              <SpotifyPlayerProvider token={token}>
                 <Home />
               </SpotifyPlayerProvider>
+            ) : (
+              <Login />
             )
           }
         />

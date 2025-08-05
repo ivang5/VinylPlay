@@ -1,17 +1,18 @@
 import { tokenStorage } from "../auth/tokenStorage";
 import { getTopTracks, getUserProfile } from "../api/spotifyApi";
 import { useEffect, useState } from "react";
-import { Vinyl } from "../components/Vinyl";
 import { useSpotifyPlayer } from "../context/SpotifyPlayerContext";
+import { Vinyl } from "../components/Vinyl";
+import { WebPlayback } from "../components/WebPlayback";
 
 export const Home = () => {
   const [user, setUser] = useState<any>(null);
   const [topTracks, setTopTracks] = useState<any>(null);
-  const accessToken = tokenStorage.accessToken;
-  const { isPlaying, togglePlay, deviceId } = useSpotifyPlayer();
+  const token = tokenStorage.accessToken;
+  const { isPaused, isActive, currentTrack } = useSpotifyPlayer();
 
   useEffect(() => {
-    if (accessToken) {
+    if (token) {
       getUserProfile().then(setUser).catch(console.error);
       getTopTracks().then(setTopTracks).catch(console.error);
     }
@@ -27,7 +28,8 @@ export const Home = () => {
   }, [topTracks]);
 
   return (
-    <div>
+    <div className="flex flex-col items-center gap-5">
+      {user && <div className="text-4xl">Welcome {user.display_name}</div>}
       <button
         className="px-3 py-1 bg-blue-300 rounded-sm border border-blue-600 cursor-pointer hover:bg-blue-400 transition-[background-color]"
         onClick={() => {
@@ -37,22 +39,11 @@ export const Home = () => {
       >
         Logout
       </button>
-      {user && <div>Welcome {user.display_name}</div>}
-      <div>
-        <div>
-          <button
-            className="px-3 py-1 bg-blue-300 rounded-sm border border-blue-600 cursor-pointer hover:bg-blue-400 transition-[background-color]"
-            onClick={() => {
-              console.log("Toggle play clicked...");
-              togglePlay();
-            }}
-          >
-            {isPlaying ? "Pause" : "Play"}
-          </button>
-          {deviceId && <p>Connected to device: {deviceId}</p>}
-        </div>
-      </div>
-      <Vinyl shouldSpin={isPlaying} />
+      <Vinyl
+        image={currentTrack?.album.images[0]?.url}
+        shouldSpin={isActive && !isPaused}
+      />
+      <WebPlayback />
     </div>
   );
 };

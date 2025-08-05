@@ -1,16 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import {
-  initializeSpotifyPlayer,
-  onPlayerInstanceReady,
-  onPlayerReady,
-  subscribeToPlayerState,
-} from "../services/spotifyPlayerService";
 import { transferPlaybackToDevice } from "../api/spotifyApi";
 
 type SpotifyPlayerContextType = {
-  isPlaying: boolean;
-  deviceId: string | null;
-  togglePlay: () => void;
+  player: Spotify.Player | undefined;
+  currentTrack: Spotify.Track | undefined;
+  isPaused: boolean;
+  isActive: boolean;
 };
 
 const SpotifyPlayerContext = createContext<SpotifyPlayerContextType | null>(
@@ -18,53 +13,67 @@ const SpotifyPlayerContext = createContext<SpotifyPlayerContextType | null>(
 );
 
 export const SpotifyPlayerProvider = ({
-  accessToken,
+  token,
   children,
 }: {
-  accessToken: string;
+  token: string;
   children: React.ReactNode;
 }) => {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [deviceId, setDeviceId] = useState<string | null>(null);
-  const [player, setPlayer] = useState<Spotify.Player | null>(null);
+  const [player, setPlayer] = useState<Spotify.Player>();
+  const [currentTrack, setCurrentTrack] = useState<Spotify.Track | undefined>();
+  const [isPaused, setPaused] = useState(false);
+  const [isActive, setActive] = useState(false);
 
   useEffect(() => {
-    initializeSpotifyPlayer(accessToken).then(() => {
-      const unsubscribeReady = onPlayerReady(async (id) => {
-        setDeviceId(id);
-        await transferPlaybackToDevice(id);
-      });
-
-      const unsubscribeInstance = onPlayerInstanceReady((playerInstance) => {
-        setPlayer(playerInstance);
-      });
-
-      const unsubscribeState = subscribeToPlayerState((state) => {
-        setIsPlaying(state?.paused === false);
-      });
-
-      return () => {
-        unsubscribeReady();
-        unsubscribeInstance();
-        unsubscribeState();
-      };
-    });
-  }, [accessToken]);
-
-  const handleTogglePlay = () => {
-    if (!player) {
-      console.warn("Spotify player not ready");
-      return;
+    const existingScript = document.querySelector("#spotify-player-sdk");
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.id = "spotify-player-sdk";
+      script.src = "https://sdk.scdn.co/spotify-player.js";
+      script.async = true;
+      document.body.appendChild(script);
     }
-    player.togglePlay();
-  };
+
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      if (player) return;
+
+      const _player = new window.Spotify.Player({
+        name: "Web Playback SDK",
+        getOAuthToken: (cb) => cb(token),
+        volume: 0.5,
+      });
+
+      setPlayer(_player);
+
+      _player.addListener("ready", ({ device_id }) => {
+        console.log("Ready with Device ID", device_id);
+        transferPlaybackToDevice(device_id);
+      });
+
+      _player.addListener("not_ready", ({ device_id }) => {
+        console.log("Device ID has gone offline", device_id);
+      });
+
+      _player.addListener("player_state_changed", (state) => {
+        if (!state) return;
+        setCurrentTrack(state.track_window.current_track);
+        setPaused(state.paused);
+        _player.getCurrentState().then((state) => {
+          setActive(!!state);
+        });
+      });
+
+      _player.connect();
+    };
+  }, [token]);
 
   return (
     <SpotifyPlayerContext.Provider
       value={{
-        isPlaying,
-        deviceId,
-        togglePlay: handleTogglePlay,
+        player,
+        currentTrack,
+        isPaused,
+        isActive,
       }}
     >
       {children}
@@ -72,7 +81,7 @@ export const SpotifyPlayerProvider = ({
   );
 };
 
-export const useSpotifyPlayer = () => {
+export function useSpotifyPlayer(): SpotifyPlayerContextType {
   const context = useContext(SpotifyPlayerContext);
   if (!context) {
     throw new Error(
@@ -80,4 +89,4 @@ export const useSpotifyPlayer = () => {
     );
   }
   return context;
-};
+}
