@@ -9,7 +9,7 @@ export const Vinyl = ({ image, shouldSpin = false }: VinylPropType) => (
   <div
     className={cn(
       "vinyl-pattern size-140 rounded-full relative border-8 border-black",
-      { "animate-spin": shouldSpin }
+      { "animate-[spin_5s_linear_infinite]": shouldSpin }
     )}
   >
     <div className="vinyl-part size-68.5"></div>
