@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSpotifyPlayer } from "../context/SpotifyPlayerContext";
 import { Vinyl } from "../components/Vinyl";
 import { WebPlayback } from "../components/WebPlayback";
+import { Cover } from "../components/Cover";
 
 export const Home = () => {
   const [user, setUser] = useState<any>(null);
@@ -39,6 +40,7 @@ export const Home = () => {
       >
         Logout
       </button>
+      <Cover image={currentTrack?.album.images[0]?.url} />
       <Vinyl
         image={currentTrack?.album.images[0]?.url}
         shouldSpin={isActive && !isPaused}
