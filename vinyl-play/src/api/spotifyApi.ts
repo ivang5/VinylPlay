@@ -54,6 +54,16 @@ export const getTopTracks = async () => {
   ).items;
 };
 
+export const getAlbum = async (albumId: string) => {
+  return await fetchWebApi(`v1/albums/${albumId}`, "GET");
+};
+
+export const getAlbumTracks = async (albumId: string, limit: number = 50) => {
+  return (
+    await fetchWebApi(`v1/albums/${albumId}/tracks?limit=${limit}`, "GET")
+  ).items;
+};
+
 export const transferPlaybackToDevice = async (device_id: string) => {
   return await fetchWebApi(
     "v1/me/player",
