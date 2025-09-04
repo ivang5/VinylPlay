@@ -6,20 +6,20 @@ import PipelineWorker from "node-vibrant/worker.worker?worker";
 Vibrant.use(new WorkerPipeline(PipelineWorker as never));
 
 type VinylPropType = {
-  image?: string;
+  imageUrl?: string;
   shouldSpin?: boolean;
 };
 
-export const Vinyl = ({ image, shouldSpin = false }: VinylPropType) => {
+export const Vinyl = ({ imageUrl, shouldSpin = false }: VinylPropType) => {
   const [color, setColor] = useState("");
 
   useEffect(() => {
-    if (!image) return;
+    if (!imageUrl) return;
 
-    Vibrant.from(image)
+    Vibrant.from(imageUrl)
       .getPalette()
       .then((palette) => setColor(palette.Vibrant?.hex || "#ffffff"));
-  }, [image]);
+  }, [imageUrl]);
 
   return (
     <div

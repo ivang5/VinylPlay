@@ -40,9 +40,9 @@ export const Home = () => {
       >
         Logout
       </button>
-      <Cover image={currentTrack?.album.images[0]?.url} />
+      <Cover imageUrl={currentTrack?.album.images[0]?.url} />
       <Vinyl
-        image={currentTrack?.album.images[0]?.url}
+        imageUrl={currentTrack?.album.images[0]?.url}
         shouldSpin={isActive && !isPaused}
       />
       <WebPlayback />
