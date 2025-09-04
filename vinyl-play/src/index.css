@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --text-tiny: 0.625rem; /* 10px */
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

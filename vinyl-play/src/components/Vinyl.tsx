@@ -6,11 +6,16 @@ import PipelineWorker from "node-vibrant/worker.worker?worker";
 Vibrant.use(new WorkerPipeline(PipelineWorker as never));
 
 type VinylPropType = {
+  album?: any;
   imageUrl?: string;
   shouldSpin?: boolean;
 };
 
-export const Vinyl = ({ imageUrl, shouldSpin = false }: VinylPropType) => {
+export const Vinyl = ({
+  album,
+  imageUrl,
+  shouldSpin = false,
+}: VinylPropType) => {
   const [color, setColor] = useState("");
 
   useEffect(() => {
@@ -36,7 +41,42 @@ export const Vinyl = ({ imageUrl, shouldSpin = false }: VinylPropType) => {
       <div
         className="vinyl-part size-56 overflow-hidden"
         style={{ backgroundColor: color }}
-      ></div>
+      >
+        {album && (
+          <div className="size-full relative">
+            <h5 className="font-bold pt-10 px-8 text-base uppercase">
+              {album.artists[0].name}
+            </h5>
+            <p className="text-base font-medium">{album.name}</p>
+            <svg
+              className="absolute inset-x-0 -bottom-1 size-full"
+              width="224"
+              height="224"
+              viewBox="0 0 224 224"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <path
+                  id="bottomArc"
+                  d="M 12 112 A 100 100 0 0 0 212 112"
+                  fill="none"
+                />
+              </defs>
+
+              <text
+                font-size="10"
+                font-family="Arial, sans-serif"
+                text-anchor="middle"
+                dominant-baseline="middle"
+              >
+                <textPath href="#bottomArc" startOffset="50%">
+                  {album.label}
+                </textPath>
+              </text>
+            </svg>
+          </div>
+        )}
+      </div>
       <div className="vinyl-part size-3 !bg-gray-200"></div>
     </div>
   );

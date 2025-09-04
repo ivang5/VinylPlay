@@ -1,5 +1,5 @@
 import { tokenStorage } from "../auth/tokenStorage";
-import { getTopTracks, getUserProfile } from "../api/spotifyApi";
+import { getAlbum, getTopTracks, getUserProfile } from "../api/spotifyApi";
 import { useEffect, useState } from "react";
 import { useSpotifyPlayer } from "../context/SpotifyPlayerContext";
 import { Vinyl } from "../components/Vinyl";
@@ -8,7 +8,8 @@ import { Cover } from "../components/Cover";
 
 export const Home = () => {
   const [user, setUser] = useState<any>(null);
-  const [topTracks, setTopTracks] = useState<any>(null);
+  const [topTracks, setTopTracks] = useState<Spotify.Track[]>([]);
+  const [album, setAlbum] = useState<any>(null);
   const token = tokenStorage.accessToken;
   const { isPaused, isActive, currentTrack } = useSpotifyPlayer();
 
@@ -18,6 +19,15 @@ export const Home = () => {
       getTopTracks().then(setTopTracks).catch(console.error);
     }
   }, []);
+
+  useEffect(() => {
+    if (!currentTrack) {
+      return;
+    }
+
+    const albumId = currentTrack.album.uri.slice(14);
+    getAlbum(albumId).then(setAlbum).catch(console.error);
+  }, [currentTrack]);
 
   useEffect(() => {
     console.log(
@@ -42,6 +52,7 @@ export const Home = () => {
       </button>
       <Cover imageUrl={currentTrack?.album.images[0]?.url} />
       <Vinyl
+        album={album}
         imageUrl={currentTrack?.album.images[0]?.url}
         shouldSpin={isActive && !isPaused}
       />
