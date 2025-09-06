@@ -5,6 +5,7 @@ import { useSpotifyPlayer } from "../context/SpotifyPlayerContext";
 import { Vinyl } from "../components/Vinyl";
 import { WebPlayback } from "../components/WebPlayback";
 import { Cover } from "../components/Cover";
+import { RecordPlayer } from "../components/RecordPlayer";
 
 export const Home = () => {
   const [user, setUser] = useState<any>(null);
@@ -50,6 +51,7 @@ export const Home = () => {
       >
         Logout
       </button>
+      <RecordPlayer />
       <Cover imageUrl={currentTrack?.album.images[0]?.url} />
       <Vinyl
         album={album}
