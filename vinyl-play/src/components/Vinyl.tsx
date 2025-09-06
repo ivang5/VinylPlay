@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { cn } from "../utils/cn";
 import { Vibrant, WorkerPipeline } from "node-vibrant/worker";
 import PipelineWorker from "node-vibrant/worker.worker?worker";
+import { truncateText } from "../utils/utils";
 
 Vibrant.use(new WorkerPipeline(PipelineWorker as never));
 
@@ -70,7 +71,7 @@ export const Vinyl = ({
                 dominantBaseline="middle"
               >
                 <textPath href="#bottomArc" startOffset="50%">
-                  {album.label}
+                  {truncateText(album.label, 70)}
                 </textPath>
               </text>
             </svg>
