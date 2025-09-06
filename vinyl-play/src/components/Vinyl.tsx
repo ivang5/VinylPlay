@@ -64,10 +64,10 @@ export const Vinyl = ({
               </defs>
 
               <text
-                font-size="10"
-                font-family="Arial, sans-serif"
-                text-anchor="middle"
-                dominant-baseline="middle"
+                fontSize="10"
+                fontFamily="Arial, sans-serif"
+                textAnchor="middle"
+                dominantBaseline="middle"
               >
                 <textPath href="#bottomArc" startOffset="50%">
                   {album.label}
