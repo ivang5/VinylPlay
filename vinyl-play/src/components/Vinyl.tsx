@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { cn } from "../utils/cn";
 import { Vibrant, WorkerPipeline } from "node-vibrant/worker";
 import PipelineWorker from "node-vibrant/worker.worker?worker";
-import { truncateText } from "../utils/utils";
+import { getContrastColor, truncateText } from "../utils/utils";
 
 Vibrant.use(new WorkerPipeline(PipelineWorker as never));
 
@@ -17,15 +17,22 @@ export const Vinyl = ({
   imageUrl,
   shouldSpin = false,
 }: VinylPropType) => {
-  const [color, setColor] = useState("");
+  const [bgColor, setBgColor] = useState("");
+  const [textColor, setTextColor] = useState("");
 
   useEffect(() => {
     if (!imageUrl) return;
 
     Vibrant.from(imageUrl)
       .getPalette()
-      .then((palette) => setColor(palette.Vibrant?.hex || "#ffffff"));
+      .then((palette) => setBgColor(palette.Vibrant?.hex || "#ffffff"));
   }, [imageUrl]);
+
+  useEffect(() => {
+    if (!bgColor) return;
+
+    setTextColor(getContrastColor(bgColor));
+  }, [bgColor]);
 
   return (
     <div
@@ -41,7 +48,7 @@ export const Vinyl = ({
       <div className="vinyl-part size-62 border-2 border-[#1a1a1a]"></div>
       <div
         className="vinyl-part size-56 overflow-hidden"
-        style={{ backgroundColor: color }}
+        style={{ backgroundColor: bgColor, color: textColor }}
       >
         {album && (
           <div className="size-full relative flex flex-col items-center justify-between">
@@ -78,6 +85,7 @@ export const Vinyl = ({
                 fontFamily="Arial, sans-serif"
                 textAnchor="middle"
                 dominantBaseline="middle"
+                fill={textColor}
               >
                 <textPath href="#bottomArc" startOffset="50%">
                   {truncateText(album.label, 70)}
