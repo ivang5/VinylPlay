@@ -53,11 +53,7 @@ export const Home = () => {
       </button>
       <RecordPlayer />
       <Cover imageUrl={currentTrack?.album.images[0]?.url} />
-      <Vinyl
-        album={album}
-        imageUrl={currentTrack?.album.images[0]?.url}
-        shouldSpin={isActive && !isPaused}
-      />
+      <Vinyl album={album} shouldSpin={isActive && !isPaused} />
       <WebPlayback />
     </div>
   );

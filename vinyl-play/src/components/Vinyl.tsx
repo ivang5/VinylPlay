@@ -8,25 +8,20 @@ Vibrant.use(new WorkerPipeline(PipelineWorker as never));
 
 type VinylPropType = {
   album?: any;
-  imageUrl?: string;
   shouldSpin?: boolean;
 };
 
-export const Vinyl = ({
-  album,
-  imageUrl,
-  shouldSpin = false,
-}: VinylPropType) => {
+export const Vinyl = ({ album, shouldSpin = false }: VinylPropType) => {
   const [bgColor, setBgColor] = useState("");
   const [textColor, setTextColor] = useState("");
 
   useEffect(() => {
-    if (!imageUrl) return;
+    if (!album?.images[0]) return;
 
-    Vibrant.from(imageUrl)
+    Vibrant.from(album.images[0].url)
       .getPalette()
       .then((palette) => setBgColor(palette.Vibrant?.hex || "#ffffff"));
-  }, [imageUrl]);
+  }, [album]);
 
   useEffect(() => {
     if (!bgColor) return;
