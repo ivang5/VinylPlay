@@ -44,11 +44,22 @@ export const Vinyl = ({
         style={{ backgroundColor: color }}
       >
         {album && (
-          <div className="size-full relative">
-            <h5 className="font-bold pt-10 px-8 text-base uppercase">
-              {album.artists[0].name}
-            </h5>
-            <p className="text-base font-medium">{album.name}</p>
+          <div className="size-full relative flex flex-col items-center justify-between">
+            <div>
+              <h5 className="font-bold pt-10 px-8 text-base uppercase">
+                {album.artists[0].name}
+              </h5>
+              <p className="text-base font-medium">{album.name}</p>
+            </div>
+            <div className="pb-10 flex flex-col items-center">
+              <p className="text-3xs line-clamp-2 max-w-44">
+                {album.copyrights[0].text}
+              </p>
+              <p className="text-3xs py-1">
+                Total tracks: {album.total_tracks}
+              </p>
+              <p className="text-3xs">{album.release_date}</p>
+            </div>
             <svg
               className="absolute inset-x-0 -bottom-1 size-full"
               width="224"
