@@ -51,13 +51,11 @@ export const Vinyl = ({
               </h5>
               <p className="text-base font-medium">{album.name}</p>
             </div>
-            <div className="pb-10 flex flex-col items-center">
+            <div className="pb-10 flex flex-col items-center gap-y-0.5">
               <p className="text-3xs line-clamp-2 max-w-44">
                 {album.copyrights[0].text}
               </p>
-              <p className="text-3xs py-1">
-                Total tracks: {album.total_tracks}
-              </p>
+              <p className="text-3xs">Total tracks: {album.total_tracks}</p>
               <p className="text-3xs">{album.release_date}</p>
             </div>
             <svg
