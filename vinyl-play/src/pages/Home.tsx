@@ -5,7 +5,7 @@ import { useSpotifyPlayer } from "../context/SpotifyPlayerContext";
 import { Vinyl } from "../components/Vinyl";
 import { WebPlayback } from "../components/WebPlayback";
 import { Cover } from "../components/Cover";
-import { RecordPlayer } from "../components/RecordPlayer";
+import { RecordPlayer } from "../components/RecordPlayer/RecordPlayer";
 
 export const Home = () => {
   const [user, setUser] = useState<any>(null);
