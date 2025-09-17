@@ -32,7 +32,7 @@ export const Vinyl = ({ album, shouldSpin = false }: VinylPropType) => {
   return (
     <div
       className={cn(
-        "vinyl-pattern size-140 rounded-full relative border-8 border-black animate-[spin_5s_linear_infinite]",
+        "vinyl-pattern size-140 rounded-full relative border-8 border-black animate-[spin_7s_linear_infinite]",
         shouldSpin
           ? "[animation-play-state:running]"
           : "[animation-play-state:paused]"

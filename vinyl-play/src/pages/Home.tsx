@@ -51,7 +51,7 @@ export const Home = () => {
       >
         Logout
       </button>
-      <RecordPlayer />
+      <RecordPlayer shouldSpin={isActive && !isPaused} />
       <Cover imageUrl={currentTrack?.album.images[0]?.url} />
       <Vinyl album={album} shouldSpin={isActive && !isPaused} />
       <WebPlayback />
