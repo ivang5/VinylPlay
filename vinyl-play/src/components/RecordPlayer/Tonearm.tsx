@@ -3,7 +3,7 @@ export const Tonearm = () => {
   const radius = 88;
 
   return (
-    <div className="absolute top-[70px] right-[280px] rounded-full bg-[#171717] size-64 z-0">
+    <div className="absolute top-[70px] right-[280px] rounded-full bg-[#171717] size-64 z-10">
       <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full">
         <circle
           cx="100"

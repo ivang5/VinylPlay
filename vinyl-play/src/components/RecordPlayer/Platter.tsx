@@ -7,7 +7,7 @@ type PlatterPropType = {
 export const Platter = ({ shouldSpin = false }: PlatterPropType) => (
   <div
     className={cn(
-      "absolute inset-y-10 left-10 w-[632px] animate-[spin_7s_linear_infinite]",
+      "absolute inset-y-10 left-10 w-[632px] animate-[spin_7s_linear_infinite] z-20",
       shouldSpin
         ? "[animation-play-state:running]"
         : "[animation-play-state:paused]"
